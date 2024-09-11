@@ -75,7 +75,7 @@ export default function Form() {
     setAddNote({ ...initialNote, id: uuid() });
     if (addNote.heading || addNote.text) {
       setNotes((pre) => [...pre, addNote]);
-      console.log(notes);
+
     }
   };
 

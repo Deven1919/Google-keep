@@ -1,4 +1,5 @@
 import axios from "axios";
+import { key } from "../Regex";
 export const signup = async (details) => {
   try {
     let userDetails = await axios.post(
@@ -13,15 +14,13 @@ export const signup = async (details) => {
 };
 
 export const login = async (details) => {
-  try {
-    let userDetails = await axios.post(
-      `http://localhost:3000/api/users/login`,
-      details
-    );
-    console.log(userDetails);
-    let token = localStorage.setItem("token", userDetails.data.token);
-    console.log(JSON.parse(token));
-  } catch (error) {
-    console.error(error);
+  let userDetails = await axios.post(
+    `http://localhost:3000/api/users/login`,
+    details
+  );
+  console.log(userDetails.status === 200 || userDetails.statusText === "OK");
+  if (userDetails.status === 200 || userDetails.statusText === "OK") {
+    let token = localStorage.setItem(key, userDetails.data.token);
   }
+  return userDetails;
 };
