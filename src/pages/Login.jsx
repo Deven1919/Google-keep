@@ -6,11 +6,13 @@ import { TextField, Button } from "@mui/material";
 const validEmail = new RegExp("^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$");
 const validPassword = new RegExp("^(?=.*?[A-Za-z])(?=.*?[0-9]).{6,}$");
 import { login } from "../services/UserService";
+import { useNavigate } from "react-router-dom";
 import { getAllNotes } from "../services/NoteServices";
 // const names = new RegExp("^[a-zA-Z]+$");
 // const username = new RegExp("^[a-zA-Z0-9]+$");
 export default function Login() {
   let isNotValid = false;
+  const navigate = useNavigate();
   const [details, setDetails] = useState({
     password: "",
     email: "",
@@ -79,9 +81,11 @@ export default function Login() {
     if (!details.email || !details.password || isNotValid === true) {
       console.log("error");
     } else {
-      const value = await login(userDetails);
-      const notes = await getAllNotes();
-      console.log(value, notes);
+      const token = await login(userDetails);
+      if (token) {
+        navigate("dashboard");
+      }
+      console.log(token.data.token);
     }
     setDetails({
       email: "",

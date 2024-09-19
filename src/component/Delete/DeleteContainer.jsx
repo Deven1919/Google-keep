@@ -1,9 +1,8 @@
-import SwipeDrawer from "./SwipeDrawer";
-import Notes from "./Note/Notes";
+import SwipeDrawer from "../SwipeDrawer";
+import DeleteNotes from "./DeleteNotes";
 import { Box } from "@mui/material";
-import Form from "./Form";
 
-export default function Home() {
+export default function DeleteContainer() {
   return (
     <>
       <Box
@@ -11,14 +10,13 @@ export default function Home() {
           // border: "5px solid blue",
           display: "flex",
           // flexDirection: "column",
-          // // marginTop: "100px",
+          // marginTop: "100px",
           justifyContent: "center",
         }}
       >
         <SwipeDrawer />
 
-        <Notes />
-        {/* <DeleteNotes /> */}
+        <DeleteNotes />
       </Box>
     </>
   );

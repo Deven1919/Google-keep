@@ -8,7 +8,8 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ArchiveOutlinedIcon from "@mui/icons-material/ArchiveOutlined";
-import { DataContext } from "../context/DataContext";
+import { DataContext } from "../../context/DataContext";
+
 const StyleCard = styled(Card)`
   width: 260px;
   margin: 8px;
@@ -19,19 +20,20 @@ const StyleCard = styled(Card)`
 `;
 
 export default function Note({ note }) {
-  const { notes, setNotes } = useContext(DataContext);
-  const { setDeleteNotes } = useContext(DataContext);
-  const deleteItems = (id) => {
-    const updatedValue = notes.filter((curr) => curr.id !== id);
-    setNotes(updatedValue);
-    setDeleteNotes((pre) => [...pre, note]);
-    // const value = notes.filter((curr) => curr.id === id);
-    // setDeleteNotes((pre) => [...pre, ...value]);
-    // setNotes((pre) => {
-    //   const value = pre.filter((curr) => curr.id !== id);
-    //   return value;
-    // });
+  const { notes, setNotes, setDeleteNotes, setArchiveNotes } =
+    useContext(DataContext);
+  const ArchiveNote = (note) => {
+    const updatedNotes = notes.filter((curr) => curr.id !== note.id);
+    setNotes(updatedNotes);
+    setArchiveNotes((pre) => [note, ...pre]);
   };
+
+  const deleteNote = (note) => {
+    const updatedNotes = notes.filter((curr) => curr.id !== note.id);
+    setNotes(updatedNotes);
+    setDeleteNotes((pre) => [note, ...pre]);
+  };
+
   return (
     <>
       {notes.length > 0 && (
@@ -45,10 +47,11 @@ export default function Note({ note }) {
           <CardActions>
             <ArchiveOutlinedIcon
               style={{ fontSize: "1.3rem", marginLeft: "auto" }}
+              onClick={() => ArchiveNote(note)}
             />
             <DeleteIcon
               style={{ fontSize: "1.3rem" }}
-              onClick={() => deleteItems(note.id)}
+              onClick={() => deleteNote(note)}
             />
           </CardActions>
         </StyleCard>
