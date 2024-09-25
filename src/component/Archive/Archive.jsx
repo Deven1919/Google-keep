@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { archive, trashNote } from "../../services/NoteServices";
 import {
   Card,
   CardContent,
@@ -20,37 +21,32 @@ const StyleCard = styled(Card)`
 `;
 
 export default function Archive({ notes }) {
-  const { archiveNotes, setArchiveNotes, setNotes, setDeleteNotes } =
-    useContext(DataContext);
-  console.log(archiveNotes);
-  console.log(notes);
+  const { archiveNotes, setArchiveNotes } = useContext(DataContext);
 
-  const deleteItem = (note) => {
-    const updatedNotes = archiveNotes.filter((curr) => curr.id !== note.id);
-    setArchiveNotes(updatedNotes);
-    setDeleteNotes((pre) => [note, ...pre]);
+  const deleteItem = async (note) => {
+    const trash = await trashNote(note._id);
+    console.log(trash);
+    const updatedNotes = archiveNotes.filter((curr) => curr._id !== note._id);
+    setArchiveNotes([...updatedNotes]);
+    // setDeleteNotes((pre) => [note, ...pre]);
   };
-  const restoreItem = (note) => {
-    const updatedNotes = archiveNotes.filter((curr) => curr.id !== note.id);
-    setArchiveNotes(updatedNotes);
-    setNotes((pre) => [...pre, note]);
+  const restoreItem = async (note) => {
+    const restore = await archive(note._id);
+    console.log(restore);
+    const updatedNotes = archiveNotes.filter((curr) => curr._id !== note._id);
+
+    setArchiveNotes([...updatedNotes]);
   };
   return (
     <>
-      <StyleCard>
+      <StyleCard style={{ backgroundColor: notes.color }}>
         <CardContent>
           <Typography variant="h6">{notes?.heading}</Typography>
 
           <Typography variant="body2" sx={{ wordBreak: "break-word" }}>
             {notes?.text}
           </Typography>
-          {/* <Typography variant="h6">fadfasfasf</Typography>
-
-          <Typography variant="body2" sx={{ wordBreak: "break-word" }}>
-            fasdfsafasfafas
-          </Typography> */}
         </CardContent>
-        {/* ///////////////////////////////// */}
 
         <CardActions>
           <RestoreFromTrashIcon

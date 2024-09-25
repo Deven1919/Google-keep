@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Box } from "@mui/material";
 import { useMediaQuery } from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
@@ -10,6 +10,7 @@ import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Controller from "./Controller";
+import { DataContext } from "../context/DataContext";
 import PermContactCalendarOutlinedIcon from "@mui/icons-material/PermContactCalendarOutlined";
 import AppsOutlinedIcon from "@mui/icons-material/AppsOutlined";
 const Search = styled("div")(({ theme }) => ({
@@ -145,19 +146,6 @@ export default function HeadeBar({ open, handleDrawer }) {
               />
             </Search>
             <Controller />
-            {/* <Box
-              sx={{
-                color: "#5f6368",
-                border: "2px solid",
-                display: "flex",
-                // width: "150px",
-                alignItems: "center",
-                justifyContent: "flex-end",
-              }}
-            >
-              <AppsOutlinedIcon style={{ marginRight: "15px" }} />
-              <PermContactCalendarOutlinedIcon />
-            </Box> */}
           </Box>
         </Toolbar>
       </Header>

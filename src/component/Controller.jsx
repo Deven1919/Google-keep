@@ -1,11 +1,15 @@
 import React from "react";
+import { useContext } from "react";
+import { DataContext } from "../context/DataContext";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PermContactCalendarOutlinedIcon from "@mui/icons-material/PermContactCalendarOutlined";
 import AppsOutlinedIcon from "@mui/icons-material/AppsOutlined";
+import SplitscreenIcon from "@mui/icons-material/Splitscreen";
 import { Box } from "@mui/material";
 export default function Controller() {
+  const { toggle, setToggle } = useContext(DataContext);
   return (
     <>
       <Box
@@ -29,13 +33,21 @@ export default function Controller() {
             marginLeft: "35px",
           }}
         >
-          {/* style={{ marginRight: "40px" }}
-          style={{ marginRight: "40px" }} */}
-
           <RefreshOutlinedIcon style={{ marginRight: "30px" }} />
-          <GridViewOutlinedIcon
+          {toggle ? (
+            <SplitscreenIcon
+              style={{ marginRight: "30px", fontSize: "1.5rem" }}
+              onClick={() => setToggle((pre) => !pre)}
+            />
+          ) : (
+            <GridViewOutlinedIcon
+              style={{ marginRight: "30px", fontSize: "1.5rem" }}
+              onClick={() => setToggle((pre) => !pre)}
+            />
+          )}
+          {/* <GridViewOutlinedIcon
             style={{ marginRight: "30px", fontSize: "1.5rem" }}
-          />
+          /> */}
           <SettingsOutlinedIcon />
         </Box>
         <Box

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
@@ -6,13 +6,12 @@ import ArchiveOutlinedIcon from "@mui/icons-material/ArchiveOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import ListItem from "@mui/material/ListItem";
 import List from "@mui/material/List";
-
-import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
-import { useNavigate, Link, NavLink, replace } from "react-router-dom";
-import { ChangeCircle } from "@mui/icons-material";
+import { Link, NavLink } from "react-router-dom";
+import { DataContext } from "../context/DataContext";
+
 const Text = styled(ListItemText)`
   font-size: 1.2rem;
   font-weight: 400;
@@ -41,37 +40,51 @@ const notesList = [
     route: "/trash",
   },
 ];
-let value = 0;
+
 export default function SideNavbar({ open, handleDrawer }) {
+  const { show, setShow } = useContext(DataContext);
+  // const [show, setShow] = useState(null);
   const inputRef = useRef();
   const icon = useRef();
   const [colorId, setColor] = useState(1);
-  const colorChange = (id) => {
-    setColor(id);
-    value = id;
+  const colorChange = (text, id) => {
+    if (typeof id === "number") {
+      setColor(id);
+    }
+    setShow(text);
   };
   ////////////
-
+  const removeHandler = () => {
+    setShow(null);
+  };
+  const overHandler = (id, text) => {
+    if (id === colorId) {
+      if (typeof text === "string") {
+        setShow(text);
+      }
+    }
+  };
   return (
     <>
-      <List open={open}>
+      <List
+        ref={inputRef}
+        onMouseLeave={removeHandler}
+        // style={{ border: "2px solid black" }}
+      >
         {notesList.map((list) => (
           <ListItem
             button="true"
-            onClick={() => colorChange(list.id)}
+            onClick={() => colorChange(list.text, list.id)}
             key={list.id}
-            ref={inputRef}
+            onMouseEnter={() => overHandler(list.id, list.text)}
             style={{
-              // backgroundColor: list.id === value ? "#FEEFC3" : "",
+              backgroundColor: list.text === show ? "#FEEFC3" : "",
               borderTopRightRadius: "50px",
               borderBottomRightRadius: "50px",
 
               // padding: "15px",
-              // width: "100%",
-              // height: "45px",
-              // minWidth: "45px",
+
               // border: "1px solid red",
-              // height: "40px",
             }}
             sx={{
               ":hover": {

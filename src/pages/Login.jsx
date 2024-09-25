@@ -84,6 +84,7 @@ export default function Login() {
       const token = await login(userDetails);
       if (token) {
         navigate("dashboard");
+        getAllNotes();
       }
       console.log(token.data.token);
     }

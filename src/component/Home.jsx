@@ -1,7 +1,7 @@
 import SwipeDrawer from "./SwipeDrawer";
 import Notes from "./Note/Notes";
 import { Box } from "@mui/material";
-import Form from "./Form";
+
 
 export default function Home() {
   return (

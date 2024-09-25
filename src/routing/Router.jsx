@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Routes, Outlet } from "react-router-dom";
 import Login from "../pages/Login";
+import SignUp from "../pages/SignUp";
 import Home from "../component/Home";
 import AuthRouter from "./AuthRouter";
 import SwipeDrawer from "../component/SwipeDrawer";
@@ -15,7 +16,8 @@ export default function Router() {
       <DataProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Login />} />
+            <Route path="/dashboard" element={<Home />} />
             <Route path="/notes" element={<NotesContainer />} />
             <Route path="/trash" element={<DeleteContainer />} />
             <Route path="/archive" element={<ArchiveContainer />} />

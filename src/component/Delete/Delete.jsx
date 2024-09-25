@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { deleteNotesById } from "../../services/NoteServices";
 import {
   Card,
   CardContent,
@@ -6,10 +7,11 @@ import {
   Typography,
   styled,
 } from "@mui/material";
+import { trashNote } from "../../services/NoteServices";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ArchiveOutlinedIcon from "@mui/icons-material/ArchiveOutlined";
+import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
 import { DataContext } from "../../context/DataContext";
-import { Unarchive } from "@mui/icons-material";
+
 const StyleCard = styled(Card)`
   width: 500px;
   margin: 8px;
@@ -20,20 +22,23 @@ const StyleCard = styled(Card)`
 `;
 
 export default function Delete({ notes }) {
-  const { deleteNotes, setArchiveNotes, setDeleteNotes } =
+  const { deleteNotes, setArchiveNotes, setNotes, setDeleteNotes } =
     useContext(DataContext);
-  const unarchive = (note) => {
-    const notes = deleteNotes.filter((curr) => curr.id !== note.id);
-    setDeleteNotes(notes);
-    setArchiveNotes((pre) => [note, ...pre]);
+  const unarchive = async (note) => {
+    await trashNote(note._id);
+
+    const notes = deleteNotes.filter((curr) => curr._id !== note._id);
+    console.log(...notes);
+    setDeleteNotes([...notes]);
   };
-  const removeItem = (note) => {
-    const item = deleteNotes.filter((curr) => curr.id !== note.id);
-    setDeleteNotes(item);
+  const removeItem = async (note) => {
+    await deleteNotesById(note._id);
+    const item = deleteNotes.filter((curr) => curr._id !== note._id);
+    setDeleteNotes([...item]);
   };
   return (
     <>
-      <StyleCard>
+      <StyleCard style={{ backgroundColor: notes.color }}>
         <CardContent>
           <Typography variant="h6">{notes?.heading}</Typography>
 
@@ -41,11 +46,10 @@ export default function Delete({ notes }) {
             {notes?.text}
           </Typography>
         </CardContent>
-        {/* ///////////////////////////////// */}
 
         <CardActions>
-          <ArchiveOutlinedIcon
-            style={{ fontSize: "1.3rem", marginLeft: "430px" }}
+          <RestoreFromTrashIcon
+            style={{ fontSize: "1.5rem", marginLeft: "430px" }}
             onClick={() => unarchive(notes)}
           />
           <DeleteIcon

@@ -1,6 +1,5 @@
 import React, { useState, useRef, useContext } from "react";
 import { styled } from "@mui/material/styles";
-
 import { v4 as uuid } from "uuid";
 import { TextField, Box, ClickAwayListener, Button } from "@mui/material";
 import { useMediaQuery } from "@mui/material";
@@ -14,7 +13,8 @@ import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
 import BrushOutlinedIcon from "@mui/icons-material/BrushOutlined";
 import { DataContext } from "../context/DataContext";
-// import InsertPhotoOutlinedIcon from "@mui/icons-material/InsertPhotoOutlined";
+import { createNotes } from "../services/NoteServices";
+import Color from "./Color";
 const Container = styled(Box)`
   display: flex;
   flex-direction: column;
@@ -45,15 +45,17 @@ const initialNote = {
   id: uuid(),
   heading: "",
   text: "",
+  color: "",
 };
 export default function Form() {
   const logo =
     "https://seeklogo.com/images/G/google-keep-logo-0BC92EBBBD-seeklogo.com.png";
 
   const [showText, setShowText] = useState(false);
-  const [addNote, setAddNote] = useState({ ...initialNote, id: uuid() });
-  const { notes, setNotes } = useContext(DataContext);
-
+  // const [addNote, setAddNote] = useState({ ...initialNote, id: uuid() });
+  const { addNote, setAddNote, setAnchorEl, color, setColor, notes, anchorEl } =
+    useContext(DataContext);
+  console.log(anchorEl);
   const textRef = useRef();
   const eventHandler = () => {
     setShowText(true);
@@ -64,28 +66,30 @@ export default function Form() {
     const { name, value } = e.target;
 
     setAddNote((pre) => {
-      return { ...pre, [name]: value };
+      return { ...pre, [name]: value, color: color };
     });
   };
 
   /////////////////////////////
-  const handleClickAway = () => {
+  const handleClickAway = async () => {
     setShowText(false);
     textRef.current.style.minHeight = "20px";
+    setColor(null);
+
     setAddNote({ ...initialNote, id: uuid() });
     if (addNote.heading || addNote.text) {
-      setNotes((pre) => [...pre, addNote]);
-
+      // setNotes((pre) => [...pre, addNote]);
+      const val = await createNotes(addNote);
     }
   };
-
+  console.log(notes);
   const matches = useMediaQuery("(max-width:600px)");
   return (
     <>
       {!matches ? (
         <>
           <ClickAwayListener onClickAway={handleClickAway}>
-            <Container ref={textRef}>
+            <Container ref={textRef} sx={{ backgroundColor: color }}>
               {showText && (
                 <>
                   <TextField
@@ -188,7 +192,10 @@ export default function Form() {
                           marginRight: "30px",
                         }}
                       >
-                        <ColorLensOutlinedIcon />
+                        <ColorLensOutlinedIcon
+                          onClick={(e) => setAnchorEl(e.currentTarget)}
+                        />
+                        <Color />
                       </Box>
                       <Box
                         sx={{

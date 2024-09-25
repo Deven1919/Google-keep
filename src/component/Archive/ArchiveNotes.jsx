@@ -1,16 +1,27 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Box, styled } from "@mui/material";
 import Archive from "./Archive";
 import { DataContext } from "../../context/DataContext";
 import SwipeDrawer from "../SwipeDrawer";
-// import Note from "./Note";
+import { getAllNotes } from "../../services/NoteServices";
 //////////////////////////////////////////////////////
 const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 export default function ArchiveNotes() {
-  const { archiveNotes } = useContext(DataContext);
-  console.log(archiveNotes);
+  const { archiveNotes, setArchiveNotes } = useContext(DataContext);
+
+  useEffect(() => {
+    async function getArchiveNotes() {
+      const notes = await getAllNotes();
+
+      const updatedValue = notes.filter(
+        (curr) => curr.trash === false && curr.archive === true
+      );
+      setArchiveNotes([...updatedValue]);
+    }
+    getArchiveNotes();
+  }, []);
 
   return (
     <>
@@ -38,7 +49,7 @@ export default function ArchiveNotes() {
           {/* <DrawerHeader /> */}
 
           {archiveNotes.map((archivenotes) => (
-            <Archive notes={archivenotes} key={archiveNotes.id} />
+            <Archive notes={archivenotes} key={archivenotes._id} />
           ))}
           {/* <Archive /> */}
         </Box>
